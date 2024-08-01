@@ -151,7 +151,19 @@ app.post('/api/login', async (req, res) => {
     res.json({ auth: true, message: 'Successfully logged in' });
 
 })
-
+app.post("/api/logout", async (req, res) => {
+  try{
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  return res.json({ status:'success',message: "Successfully Logged Out" });
+}
+catch(e)
+{
+  return res.json({ status:'failure',message: "Unable to sign out" });
+}
+});
 app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`)
 })
