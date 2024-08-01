@@ -10,7 +10,7 @@ import { LogOut, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const user = false;
+  const user = true;
   return (
     <div className="bg-white">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
@@ -70,7 +70,7 @@ function Navbar() {
                   </div>
                   <div className="flex w-fit items-center gap-2 cursor-pointer">
                     <LogOut />
-                    <Button variant="link">Logout</Button>
+                    <Button variant="link">Log out</Button>
                   </div>
                 </div>
               </PopoverContent>

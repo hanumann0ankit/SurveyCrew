@@ -4,25 +4,35 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+import axios from 'axios';
 
 const SignIn= () => {
+    const navigate = useNavigate();
+    const [message, setMessage]=useState('')
+    const [messageColor, setMessageColor]=useState('red')
     const [input, setInput] = useState({
         email: "",
         password: "",
-        role: "",
     });
-
+    const messageStyle = {
+        color: `${messageColor}`,  
+      };
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     };
 
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        // upload resume file
-        // call backend api for signup
-        console.log(input);
+        const response = await axios.post('http://localhost:3000/api/login', input)
+        if(response.data.auth)
+        {   
+            setMessageColor('green')
+            setMessage(response.data.message)
+        }
+        setMessage(response.data.message)
+
     };
 
     return (
@@ -60,14 +70,15 @@ const SignIn= () => {
                     </div>
                     
                     <Button type="submit" className="w-full my-4">
-                        SignIn
+                        Sign In
                     </Button>
                     <span className="text-sm">
                         Don't have an account?
                         <Link to="/signup" className="text-blue-600 pl-1 ">
-                            SignUp
+                            Sign Up
                         </Link>
                     </span>
+                    <p style={messageStyle}>{message}</p>
                 </form>
             </div>
         </div>
