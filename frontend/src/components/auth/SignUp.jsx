@@ -3,30 +3,34 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import { useState } from "react";
+import axios from 'axios';
 
 const SignUp = () => {
+    const navigate = useNavigate();
+    const [message, setMessage]=useState('')
+    const [messageColor, setMessageColor]=useState('red')
     const [input, setInput] = useState({
-        fullname: "",
+        fullName: "",
         email: "",
         phoneNumber: "",
-        password: "",
-        role: "",
-        file: "",
     });
-
+    const messageStyle = {
+        color: `${messageColor}`,  // Set the color you want here
+      };
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     };
 
     
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        // upload resume file
         // call backend api for signup
-        console.log(input);
+        const response = await axios.post('http://localhost:3000/api/register',input);
+        setMessageColor(response.data.registered?'green':'red');
+        setMessage(response.data.message)
     };
 
     return (
@@ -48,7 +52,7 @@ const SignUp = () => {
                             type="text"
                             placeholder="ankit"
                             value={input.fullname}
-                            name="fullname"
+                            name="fullName"
                             onChange={changeEventHandler}
                         />
                     </div>
@@ -72,16 +76,6 @@ const SignUp = () => {
                             onChange={changeEventHandler}
                         />
                     </div>
-                    <div className="my-2">
-                        <Label>Password</Label>
-                        <Input
-                            type=""
-                            placeholder="**********"
-                            value={input.password}
-                            name="password"
-                            onChange={changeEventHandler}
-                        />
-                    </div>
                     
                     <Button type="submit" className="w-full my-4">
                         SignUp
@@ -92,6 +86,7 @@ const SignUp = () => {
                             Login
                         </Link>
                     </span>
+                    <p style={messageStyle}>{message}</p>
                 </form>
             </div>
         </div>
